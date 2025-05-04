@@ -33,7 +33,7 @@ python task1.py
 ##  Запуск коду
 
 ```bash
-python task1.py 
+python task2.py 
 ```
 
 ###  Висновки (DFS і BFS)
@@ -52,7 +52,7 @@ python task1.py
 ##  Запуск коду
 
 ```bash
-python task1.py 
+python task3.py 
 ```
 
 ---
