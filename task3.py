@@ -1,21 +1,37 @@
-import networkx as nx
-from task1 import G
+import heapq
 
-weighted_edges = [
-    ("Центральна Площа", "Вокзал", 5),
-    ("Центральна Площа", "Університет", 3),
-    ("Університет", "Торговий центр", 4),
-    ("Торговий центр", "Житловий масив", 6),
-    ("Житловий масив", "Лікарня", 7),
-    ("Лікарня", "Парк", 5),
-    ("Парк", "Центральна Площа", 8)
-]
+graph = {
+    "Центральна Площа": [("Вокзал", 5), ("Університет", 3), ("Парк", 8)],
+    "Вокзал": [("Центральна Площа", 5)],
+    "Університет": [("Центральна Площа", 3), ("Торговий центр", 4)],
+    "Торговий центр": [("Університет", 4), ("Житловий масив", 6)],
+    "Житловий масив": [("Торговий центр", 6), ("Лікарня", 7)],
+    "Лікарня": [("Житловий масив", 7), ("Парк", 5)],
+    "Парк": [("Лікарня", 5), ("Центральна Площа", 8)],
+}
 
-WG = nx.Graph()
-WG.add_weighted_edges_from(weighted_edges)
+def dijkstra(graph, start):
+    distances = {node: float('inf') for node in graph}
+    distances[start] = 0
+    priority_queue = [(0, start)]
 
-print("\nНайкоротші шляхи від Центральна Площа (алгоритм Дейкстри):")
-for target in WG.nodes:
-    path = nx.dijkstra_path(WG, source="Центральна Площа", target=target)
-    length = nx.dijkstra_path_length(WG, source="Центральна Площа", target=target)
-    print(f"До {target}: шлях {path}, довжина {length}")
+    while priority_queue:
+        current_distance, current_node = heapq.heappop(priority_queue)
+
+        if current_distance > distances[current_node]:
+            continue
+
+        for neighbor, weight in graph[current_node]:
+            distance = current_distance + weight
+            if distance < distances[neighbor]:
+                distances[neighbor] = distance
+                heapq.heappush(priority_queue, (distance, neighbor))
+
+    return distances
+
+start_node = "Центральна Площа"
+shortest_paths = dijkstra(graph, start_node)
+
+print(f"\nНайкоротші відстані від '{start_node}':")
+for node, distance in shortest_paths.items():
+    print(f"До {node}: {distance}")
